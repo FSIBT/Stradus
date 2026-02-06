@@ -36,9 +36,9 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/arunpersaud/Stradus"
-Repository = "https://github.com/arunpersaud/Stradus"
-Issues = "https://github.com/arunpersaud/Stradus/issues"
+Homepage = "https://github.com/FSIBT/Stradus"
+Repository = "https://github.com/FSIBT/Stradus"
+Issues = "https://github.com/FSIBT/Stradus/issues"
 
 [tool.ruff]
 line-length = 88
