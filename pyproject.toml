@@ -1,13 +1,15 @@
 [build-system]
-requires = ["setuptools>61", "setuptools_scm[toml]>=6.2"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.10.0,<0.11.0"]
+build-backend = "uv_build"
 
 [project]
-name = "vortran"
-dynamic = ["version"]
+name = "vortran-lbl"
+version = "1.0.0"
+license = {file = "LICENSE"}
 description = "A Python project to control a Vortran Stradus laser"
 authors = [
-  { name = "Arun Persaud", email = "apersaud@lbl.gov" }
+  { name = "Arun Persaud", email = "apersaud@lbl.gov" },
+  { name = "Sean Vo", email = "svo2@lbl.gov" }
 ]
 readme = "README.md"
 requires-python = ">=3.10"
@@ -18,6 +20,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Operating System :: OS Independent"
 ]
 
@@ -32,11 +35,10 @@ test = [
   "pytest-cov",
 ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.setuptools_scm]
-write_to = "src/vortran/_version.py"
+[project.urls]
+Homepage = "https://github.com/arunpersaud/Stradus"
+Repository = "https://github.com/arunpersaud/Stradus"
+Issues = "https://github.com/arunpersaud/Stradus/issues"
 
 [tool.ruff]
 line-length = 88

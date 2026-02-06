@@ -1,19 +1,27 @@
 # Stradus SDK for Vortran lasers
 
+Note: Python library for controlling Vortran Stradus lasers,
+maintained by Lawrence Berkeley National Laboratory.
+
 ## Installation
 
 If you don't have python already on your system you can install it using [uv](https://docs.astral.sh/uv/#installation).
 
-Install the package using uv directly from the cloned git repository:
+Install the package from PyPI:
+
+    uv pip install vortran-lbl
+
+You can also first clone this git repository and then install the
+package using uv directly from the cloned git repository:
 
     uv pip install -e .
 
 ## Use
 
-The code below shows how to use the package (note: currently not tested)
+The code below shows how to use the package
 
 ```python
-import vortran
+import vortran_lbl as vortran
 
 lasers = vortran.get_lasers()
 
@@ -33,13 +41,13 @@ laser.off()
 
 ## Logging Configuration
 
-The vortran library uses Python's standard logging module. By default, no log messages are shown. To see log output, configure logging in your application:
+The vortran_lbl library uses Python's standard logging module. By default, no log messages are shown. To see log output, configure logging in your application:
 
 ### Basic Logging Setup
 
 ```python
 import logging
-import vortran
+import vortran_lbl as vortran
 
 # Show INFO level and above (device discovery, connections)
 logging.basicConfig(level=logging.INFO)
@@ -54,19 +62,19 @@ lasers = vortran.get_lasers()  # Will now show log messages
 
 ```python
 import logging
-import vortran
+import vortran_lbl as vortran
 
 # Configure specific logger levels
-logging.getLogger('vortran.usb').setLevel(logging.INFO)      # USB device discovery
-logging.getLogger('vortran.laser').setLevel(logging.DEBUG)   # Laser operations
-logging.getLogger('vortran.usb_connection').setLevel(logging.WARNING)  # Only errors
+logging.getLogger('vortran_lbl.usb').setLevel(logging.INFO)      # USB device discovery
+logging.getLogger('vortran_lbl.laser').setLevel(logging.DEBUG)   # Laser operations
+logging.getLogger('vortran_lbl.usb_connection').setLevel(logging.WARNING)  # Only errors
 
 # Custom formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)
 
-logger = logging.getLogger('vortran')
+logger = logging.getLogger('vortran_lbl')
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 ```
@@ -134,7 +142,7 @@ pytest
 
 Run tests with coverage:
 ```bash
-pytest --cov=src/vortran --cov-report=term-missing
+pytest --cov=src/vortran_lbl --cov-report=term-missing
 ```
 
 ### Contributing

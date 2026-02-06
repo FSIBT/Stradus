@@ -4,7 +4,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from pathlib import Path
 
-from vortran.usb import (
+from vortran_lbl.usb import (
     parse_bus_and_address,
     _find_libusb_in_site_packages,
     get_usb_backend,
@@ -75,10 +75,10 @@ class TestParseBusAndAddress:
 class TestFindLibusbInSitePackages:
     """Tests for _find_libusb_in_site_packages function."""
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.site.getsitepackages")
-    @patch("vortran.usb.site.getusersitepackages")
-    @patch("vortran.usb.platform.architecture")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.site.getsitepackages")
+    @patch("vortran_lbl.usb.site.getusersitepackages")
+    @patch("vortran_lbl.usb.platform.architecture")
     def test_find_libusb_windows_64bit(
         self, mock_arch, mock_user_site, mock_site_packages, mock_platform
     ):
@@ -97,9 +97,9 @@ class TestFindLibusbInSitePackages:
             )
             assert result == expected_path
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.site.getsitepackages")
-    @patch("vortran.usb.platform.architecture")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.site.getsitepackages")
+    @patch("vortran_lbl.usb.platform.architecture")
     def test_find_libusb_windows_32bit(
         self, mock_arch, mock_site_packages, mock_platform
     ):
@@ -117,16 +117,16 @@ class TestFindLibusbInSitePackages:
             )
             assert result == expected_path
 
-    @patch("vortran.usb.platform.system")
+    @patch("vortran_lbl.usb.platform.system")
     def test_find_libusb_non_windows(self, mock_platform):
         """Test finding libusb on non-Windows platform."""
         mock_platform.return_value = "Linux"
         result = _find_libusb_in_site_packages()
         assert result is None
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.site.getsitepackages")
-    @patch("vortran.usb.platform.architecture")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.site.getsitepackages")
+    @patch("vortran_lbl.usb.platform.architecture")
     def test_find_libusb_not_found(self, mock_arch, mock_site_packages, mock_platform):
         """Test when libusb is not found in site-packages."""
         mock_platform.return_value = "Windows"
@@ -138,9 +138,9 @@ class TestFindLibusbInSitePackages:
             result = _find_libusb_in_site_packages()
             assert result is None
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.site.getsitepackages")
-    @patch("vortran.usb.platform.architecture")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.site.getsitepackages")
+    @patch("vortran_lbl.usb.platform.architecture")
     def test_find_libusb_unsupported_architecture(
         self, mock_arch, mock_site_packages, mock_platform
     ):
@@ -156,15 +156,15 @@ class TestFindLibusbInSitePackages:
 class TestGetUsbBackend:
     """Tests for get_usb_backend function."""
 
-    @patch("vortran.usb.platform.system")
+    @patch("vortran_lbl.usb.platform.system")
     def test_get_usb_backend_non_windows(self, mock_platform):
         """Test get_usb_backend on non-Windows platform."""
         mock_platform.return_value = "Linux"
         result = get_usb_backend()
         assert result is None
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.os.getenv")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.os.getenv")
     def test_get_usb_backend_custom_path_exists(self, mock_getenv, mock_platform):
         """Test get_usb_backend with valid custom path."""
         mock_platform.return_value = "Windows"
@@ -172,15 +172,17 @@ class TestGetUsbBackend:
 
         with patch.object(Path, "exists") as mock_exists:
             mock_exists.return_value = True
-            with patch("vortran.usb.usb.backend.libusb1.get_backend") as mock_backend:
+            with patch(
+                "vortran_lbl.usb.usb.backend.libusb1.get_backend"
+            ) as mock_backend:
                 mock_backend.return_value = MagicMock()
                 result = get_usb_backend()
 
                 assert result is not None
                 mock_backend.assert_called_once()
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.os.getenv")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.os.getenv")
     def test_get_usb_backend_custom_path_not_exists(self, mock_getenv, mock_platform):
         """Test get_usb_backend with invalid custom path."""
         mock_platform.return_value = "Windows"
@@ -193,9 +195,9 @@ class TestGetUsbBackend:
 
             assert "Custom libusb library not found" in str(exc_info.value)
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.os.getenv")
-    @patch("vortran.usb._find_libusb_in_site_packages")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.os.getenv")
+    @patch("vortran_lbl.usb._find_libusb_in_site_packages")
     def test_get_usb_backend_site_packages_found(
         self, mock_find_site, mock_getenv, mock_platform
     ):
@@ -204,17 +206,17 @@ class TestGetUsbBackend:
         mock_getenv.return_value = None  # No custom path
         mock_find_site.return_value = Path("/site/packages/libusb-1.0.dll")
 
-        with patch("vortran.usb.usb.backend.libusb1.get_backend") as mock_backend:
+        with patch("vortran_lbl.usb.usb.backend.libusb1.get_backend") as mock_backend:
             mock_backend.return_value = MagicMock()
             result = get_usb_backend()
 
             assert result is not None
             mock_backend.assert_called_once()
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.os.getenv")
-    @patch("vortran.usb._find_libusb_in_site_packages")
-    @patch("vortran.usb.platform.architecture")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.os.getenv")
+    @patch("vortran_lbl.usb._find_libusb_in_site_packages")
+    @patch("vortran_lbl.usb.platform.architecture")
     def test_get_usb_backend_default_path_exists(
         self, mock_arch, mock_find_site, mock_getenv, mock_platform
     ):
@@ -226,17 +228,19 @@ class TestGetUsbBackend:
 
         with patch.object(Path, "exists") as mock_exists:
             mock_exists.return_value = True
-            with patch("vortran.usb.usb.backend.libusb1.get_backend") as mock_backend:
+            with patch(
+                "vortran_lbl.usb.usb.backend.libusb1.get_backend"
+            ) as mock_backend:
                 mock_backend.return_value = MagicMock()
                 result = get_usb_backend()
 
                 assert result is not None
                 mock_backend.assert_called_once()
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.os.getenv")
-    @patch("vortran.usb._find_libusb_in_site_packages")
-    @patch("vortran.usb.platform.architecture")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.os.getenv")
+    @patch("vortran_lbl.usb._find_libusb_in_site_packages")
+    @patch("vortran_lbl.usb.platform.architecture")
     def test_get_usb_backend_no_library_found(
         self, mock_arch, mock_find_site, mock_getenv, mock_platform
     ):
@@ -256,10 +260,10 @@ class TestGetUsbBackend:
             assert "Environment variable: VORTRAN_LIBUSB_PATH" in error_msg
             assert "Site-packages: libusb package" in error_msg
 
-    @patch("vortran.usb.platform.system")
-    @patch("vortran.usb.os.getenv")
-    @patch("vortran.usb._find_libusb_in_site_packages")
-    @patch("vortran.usb.platform.architecture")
+    @patch("vortran_lbl.usb.platform.system")
+    @patch("vortran_lbl.usb.os.getenv")
+    @patch("vortran_lbl.usb._find_libusb_in_site_packages")
+    @patch("vortran_lbl.usb.platform.architecture")
     def test_get_usb_backend_unsupported_architecture(
         self, mock_arch, mock_find_site, mock_getenv, mock_platform
     ):

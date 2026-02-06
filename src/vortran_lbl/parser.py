@@ -5,7 +5,6 @@ File to parse the output string from the laser.
 """
 
 
-
 def parse_output(input: str | None) -> list[str] | None:
     """Parses response from microcontroller to seperate out the
     important data. Returns the data as a variable-length list.

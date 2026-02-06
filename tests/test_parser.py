@@ -1,7 +1,7 @@
 """Tests for parser module."""
 
 import pytest
-from vortran.parser import parse_output, verify_result
+from vortran_lbl.parser import parse_output, verify_result
 
 
 class TestParseOutput:

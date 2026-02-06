@@ -1,4 +1,4 @@
-import vortran
+import vortran_lbl as vortran
 
 if __name__ == "__main__":
     my_connection = []
