@@ -1,4 +1,15 @@
 *~
 __pycache__
-_*
 *.egg-info/
+
+# Build artifacts
+dist/
+build/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# uv
+.uv_cache/
